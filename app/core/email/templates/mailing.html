@@ -1,0 +1,19 @@
+{% extends "base.html" %} {% block style %}
+<style>
+  .title {
+    color: blue;
+  }
+</style>
+{% endblock %} {% block body %}
+<div class="container">
+  <h1 class="title">
+    Здравствуйте! На ЭСКРО была вылажена новость. Успейте прочесть ее первым!
+  </h1>
+  <div class="content">
+    <h2>{{ title }}</h2>
+    <p>{{ text }}</p>
+    <p>Читайте подробнее по кнопке снизу:</p>
+    <a href="{{ refirect_url }}">Читать</a>
+  </div>
+</div>
+{% endblock %}

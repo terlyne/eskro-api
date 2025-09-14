@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  eskro_api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - ./app/.env
+    volumes:
+      - ./certs:/certs
+      - ./uploads:/uploads
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: eskro_db
+      POSTGRES_USER: eskro_user
+      POSTGRES_PASSWORD: Y3nWx98fAQ1zxeIsP4R
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eskro_user -d eskro_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+volumes:
+  postgres_data:
+    driver: local

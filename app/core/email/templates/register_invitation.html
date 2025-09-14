@@ -1,0 +1,16 @@
+{% extends "base.html" %} {% block style %}
+<style>
+.title{ color: yellow; }
+</style>
+{% endblock %} {% block body %}
+<div class="container">
+  <h1 class="title">
+    Здравствуйте! Вам было отправлено приглашение на регистрацию в системе
+    ЭСКРО.
+  </h1>
+  <p>Для регистрации воспользуйтесь кнопкой ниже:</p>
+  <a href="{{ invitation_url }}" class="button">ХА-ХА-ХА!</a>
+  <p>Ссылка действительна в течение часа.</p>
+  <p>С уважением, команда ЭСКРО.</p>
+</div>
+{% endblock %}

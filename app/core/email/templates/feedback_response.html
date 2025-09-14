@@ -1,0 +1,38 @@
+{% extends "base.html" %} {% block style %}
+<style>
+  .title {
+    color: #2563eb;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .highlight {
+    color: #2563eb;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .container {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+  }
+</style>
+{% endblock %} {% block body %}
+<div class="container">
+  <h1 class="title">{{ first_name }}, здравствуйте!</h1>
+  <p>
+    Спасибо, что обратились в ЭСКРО. Мы уже разобрались с вашим вопросом по
+    поводу <em>«{{ question }}».</em>.
+  </p>
+  <p class="highlight">Даем Вам наш ответ:</p>
+  <p>{{ answer }}</p>
+  <br />
+  <p>
+    Надеемся, наш ответ был для Вас полезен. Если что-то нужно объяснить
+    подробнее или у вас появился новый вопрос — просто ответьте на это письмо.
+  </p>
+  <p>С уважением, команда ЭСКРО.</p>
+</div>
+{% endblock %}

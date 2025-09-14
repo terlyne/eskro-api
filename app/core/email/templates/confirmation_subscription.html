@@ -1,0 +1,40 @@
+{% extends "base.html" %} {% block style %}
+<style>
+  .title {
+    color: #2563eb;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+
+  .button {
+    display: inline-block;
+    padding: 12px 24px;
+    background-color: white;
+    color: #2563eb;
+    border: 2px solid #2563eb;
+    border-radius: 6px;
+    font-weight: bold;
+    text-decoration: none;
+  }
+
+  .button:hover {
+    background-color: #2563eb;
+    color: white;
+  }
+
+  .container {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+  }
+</style>
+{% endblock %} {% block body %}
+<div class="container">
+  <h1 class="title">
+    Здравствуйте! Вы оставляли заявку на подписку на новости на сайте ЭСКРО.
+  </h1>
+  <p>Для подтверждения подписки нажмите на кнопку ниже:</p>
+  <a href="{{ confirmation_url }}" class="button"> Подтвердить регистрацию </a>
+  <p>С уважением, команда ЭСКРО.</p>
+</div>
+{% endblock %}
