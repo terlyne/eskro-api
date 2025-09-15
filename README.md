@@ -55,6 +55,12 @@ API сервис для сайта ЭСКРО, построенный на FastA
 
    Из `/app/security/README.md` скопируйте команды и запустите их в корне проекта
 
+   Для HTTPS создайте в корне проекта папку `ssl_certs` и создайте там ключи командами:
+
+   ```bash
+   openssl req -x509 -newkey rsa:4096 -keyout ssl_certs/key.pem -out ssl_certs/cert.pem -days 365 -nodes -subj "/CN=localhost"
+   ```
+
 6. **Запустите миграции:**
 
    ```bash

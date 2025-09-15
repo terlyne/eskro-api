@@ -15,6 +15,7 @@ RUN poetry install --no-interaction
 COPY app/ ./app/
 COPY certs/ ./certs/
 COPY uploads/ ./uploads/
+COPY ssl_certs/ ./ssl_certs
 
 
 CMD ["sh", "-c", "cd app && alembic upgrade head && exec python main.py"]

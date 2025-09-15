@@ -221,5 +221,6 @@ __marimo__/
 # Uploads directory
 uploads/
 
-# Certs directory
+# Certs directories
 certs/
+ssl_certs/

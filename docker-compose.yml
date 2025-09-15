@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+      - "8443:8443"
     depends_on:
       db:
         condition: service_healthy
@@ -15,6 +16,7 @@ services:
     volumes:
       - ./certs:/certs
       - ./uploads:/uploads
+      - ./ssl_certs:/ssl_certs
     restart: unless-stopped
 
   db:
