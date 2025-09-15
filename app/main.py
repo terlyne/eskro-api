@@ -1,10 +1,11 @@
 import asyncio
-from typing import Any, AsyncGenerator
+from typing import AsyncGenerator
 from contextlib import asynccontextmanager
 
 import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from cleanup_tokens import setup_cleanup_tokens
 from core.config import settings
@@ -18,7 +19,7 @@ from core.admin.service import admin_service
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     async with db_helper.session_factory() as session:  # Создаем администратора
         await admin_service.create_admin(session=session)
-    
+
     # Запускаем cron на очистку таблицы с токенами
     cleanup_tokens_task = asyncio.create_task(setup_cleanup_tokens())
     yield
@@ -28,12 +29,21 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
         await cleanup_tokens_task
     except asyncio.CancelledError:
         pass
-    
+
 
 app = FastAPI(
     lifespan=lifespan,
     default_response_class=ORJSONResponse,  # Ускоряет работу с сериализацией и десериализацией JSON
 )
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(router=api_router, prefix=settings.api.prefix)
 
 
