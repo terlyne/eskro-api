@@ -1,3 +1,4 @@
+import asyncio
 from typing import Any, AsyncGenerator
 from contextlib import asynccontextmanager
 
@@ -5,6 +6,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
+from cleanup_tokens import setup_cleanup_tokens
 from core.config import settings
 from core.db_helper import db_helper
 from core.models import Base
@@ -16,21 +18,23 @@ from core.admin.service import admin_service
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     async with db_helper.session_factory() as session:  # Создаем администратора
         await admin_service.create_admin(session=session)
-
+    
+    # Запускаем cron на очистку таблицы с токенами
+    cleanup_tokens_task = asyncio.create_task(setup_cleanup_tokens())
     yield
 
+    cleanup_tokens_task.cancel()
+    try:
+        await cleanup_tokens_task
+    except asyncio.CancelledError:
+        pass
+    
 
 app = FastAPI(
     lifespan=lifespan,
-    default_response_class=ORJSONResponse,  # Ускоряет работу с сериализацией и десериализацией
+    default_response_class=ORJSONResponse,  # Ускоряет работу с сериализацией и десериализацией JSON
 )
 app.include_router(router=api_router, prefix=settings.api.prefix)
-
-
-@app.get("/health")
-async def health_check():
-    """Health check endpoint for Docker healthcheck"""
-    return {"status": "healthy", "message": "API is running"}
 
 
 if __name__ == "__main__":

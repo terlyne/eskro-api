@@ -22,7 +22,7 @@ services:
     environment:
       POSTGRES_DB: eskro_db
       POSTGRES_USER: eskro_user
-      POSTGRES_PASSWORD: Y3nWx98fAQ1zxeIsP4R
+      POSTGRES_PASSWORD: eskro_pwd
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:

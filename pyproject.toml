@@ -19,6 +19,7 @@ dependencies = [
     "fastapi-mail (>=1.5.0,<2.0.0)",
     "python-multipart (>=0.0.20,<0.0.21)",
     "aiofiles (>=24.1.0,<25.0.0)",
+    "apscheduler (>=3.11.0,<4.0.0)",
 ]
 
 [tool.poetry]
