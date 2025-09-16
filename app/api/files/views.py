@@ -7,7 +7,7 @@ from core.config import settings
 router = APIRouter()
 
 
-@router.get("/files/{file_path:path}")
+@router.get("/{file_path:path}")
 async def get_file(file_path: str):
     full_file_path = settings.file.uploads_dir / file_path
 

@@ -218,9 +218,5 @@ __marimo__/
 # History (VS Code Extension)
 .history/
 
-# Uploads directory
-uploads/
-
 # Certs directories
-certs/
 ssl_certs/

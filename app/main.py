@@ -48,29 +48,10 @@ app.add_middleware(
 app.include_router(router=api_router, prefix=settings.api.prefix)
 
 
-def get_ssl_config() -> dict[str, Any]:
-    ssl_dir = Path(__file__).parent.parent / "ssl_certs"
-    ssl_keyfile = ssl_dir / "key.pem"
-    ssl_certfile = ssl_dir / "cert.pem"
-
-    if ssl_keyfile.exists() and ssl_certfile.exists():
-        print(f"SSL сертификаты найдены: {ssl_keyfile}, {ssl_certfile}")
-        return {
-            "ssl_keyfile": str(ssl_keyfile),
-            "ssl_certfile": str(ssl_certfile),
-        }
-    else:
-        print("SSL сертификаты не найдены, приложение запускается без HTTPS")
-        return {}
-
-
 if __name__ == "__main__":
-    ssl_config = get_ssl_config()
-
     uvicorn.run(
         app="main:app",
         host=settings.run.host,
         port=settings.run.port,
-        reload=False,
-        **ssl_config,
+        reload=True,
     )
