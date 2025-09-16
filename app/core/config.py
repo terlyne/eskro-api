@@ -73,6 +73,9 @@ class HeaderConfig(BaseModel):
     refresh_token_header: str
 
 
+class SSLConfig(BaseModel):
+    dir: str
+
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=False,
@@ -90,6 +93,6 @@ class Settings(BaseSettings):
     admin: AdminConfig
     file: FileConfig
     header: HeaderConfig
-
+    ssl: SSLConfig
 
 settings = Settings()

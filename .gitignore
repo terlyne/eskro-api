@@ -219,8 +219,12 @@ __marimo__/
 .history/
 
 # Uploads directory
-uploads/
+uploads/*
+!uploads/.keep
 
 # Certs directories
-certs/
-ssl_certs/
+certs/*
+!certs/.keep
+
+ssl_certs/*
+!ssl_certs/.keep

@@ -1,3 +1,4 @@
+import os
 import asyncio
 from typing import AsyncGenerator, Any
 from contextlib import asynccontextmanager
@@ -49,28 +50,32 @@ app.include_router(router=api_router, prefix=settings.api.prefix)
 
 
 def get_ssl_config() -> dict[str, Any]:
-    ssl_dir = Path(__file__).parent.parent / "ssl_certs"
-    ssl_keyfile = ssl_dir / "key.pem"
-    ssl_certfile = ssl_dir / "cert.pem"
+    key_path = os.path.join(settings.ssl.dir, "privkey.pem")
+    cert_path = os.path.join(settings.ssl.dir, "fullchain.pem")
 
-    if ssl_keyfile.exists() and ssl_certfile.exists():
-        print(f"SSL сертификаты найдены: {ssl_keyfile}, {ssl_certfile}")
+    if os.path.exists(key_path) and os.path.exists(cert_path):
+        print("SSL сертификаты найдены. Запуск с поддержкой HTTPS")
         return {
-            "ssl_keyfile": str(ssl_keyfile),
-            "ssl_certfile": str(ssl_certfile),
+            "ssl_keyfile": key_path,
+            "ssl_certfile": cert_path,
         }
     else:
-        print("SSL сертификаты не найдены, приложение запускается без HTTPS")
-        return {}
+        print("SSL сертификаты не найдены! Запуск без поддержки HTTPS")
+        return None
 
 
 if __name__ == "__main__":
     ssl_config = get_ssl_config()
 
-    uvicorn.run(
-        app="main:app",
-        host=settings.run.host,
-        port=settings.run.port,
-        reload=False,
-        **ssl_config,
-    )
+    uvicorn_config = {
+        "app": "main:app",
+        "host": settings.run.host,
+        "port": 443 if ssl_config else 8000,
+        "reload": False,
+    }
+
+    if ssl_config:
+        uvicorn_config.update(ssl_config)
+
+    uvicorn.run(**uvicorn_config)
+

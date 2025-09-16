@@ -2,12 +2,12 @@ version: '3.8'
 
 services:
   eskro_api:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
-      - "8443:8443"
+      - "443:443"
     depends_on:
       db:
         condition: service_healthy
@@ -16,7 +16,7 @@ services:
     volumes:
       - ./certs:/certs
       - ./uploads:/uploads
-      - ./ssl_certs:/ssl_certs
+      - /etc/letsencrypt/:/etc/letsencrypt/:ro
     restart: unless-stopped
 
   db:

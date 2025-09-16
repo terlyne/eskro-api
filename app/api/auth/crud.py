@@ -86,10 +86,10 @@ async def change_user_password(
 ):
     user = await users_crud.get_user_by_id(session=session, user_id=user_id)
 
-    if not user.check_password(plain_password=password):
+    if user.check_password(plain_password=password):
         raise ValueError("New password cannot be the same as the old one")
 
     user.password = password
-    await session.commit
+    await session.commit()
     await session.refresh(user)
     return user

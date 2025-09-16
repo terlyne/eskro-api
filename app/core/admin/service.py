@@ -23,10 +23,8 @@ class AdminService:
         admin = User(
             email=settings.admin.email,
             username=settings.admin.username,
-            # password=self._generate_random_password(), change from deploy
             password="adminadmin",
             role=ADMIN_ROLE,
-            # is_active=False,  # Администратор при запуске приложения не активен # change from deply
             is_active=True,
         )
 
