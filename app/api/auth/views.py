@@ -34,7 +34,7 @@ from api.auth.dependencies import (
 router = APIRouter()
 
 
-@router.get("/get-public-key")
+@router.get("/get-public-key/")
 async def get_public_key():
     public_key = settings.auth.public_key_path.read_text()
     return {"public_key": public_key}
@@ -75,7 +75,7 @@ async def register_user(
         )
 
 
-@router.post("/send-register-invitation")
+@router.post("/send-register-invitation/")
 async def send_register_invitation(
     email: str,
     admin: User = Depends(get_current_admin),
