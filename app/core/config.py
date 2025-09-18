@@ -66,6 +66,7 @@ class AdminConfig(BaseModel):
 class FileConfig(BaseModel):
     uploads_dir: Path = BASE_DIR / "uploads"
     allowed_image_types: set[str]
+    allowed_document_types: set[str]
     max_file_size: int
 
 
