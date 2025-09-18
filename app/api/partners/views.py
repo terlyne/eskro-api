@@ -47,7 +47,7 @@ async def create_partner(
     user: User = Depends(get_current_active_user),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    logo_url = await file_service.save_upload_file(
+    logo_url = await file_service.save_image_file(
         upload_file=logo,
         subdirectory=PARTNERS_FOLDER,
     )
@@ -83,7 +83,7 @@ async def update_partner(
 
     if logo:
         await file_service.delete_file(current_partner.logo_url)
-        logo_url = await file_service.save_upload_file(
+        logo_url = await file_service.save_image_file(
             upload_file=logo, subdirectory=PARTNERS_FOLDER
         )
 

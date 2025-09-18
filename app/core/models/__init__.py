@@ -10,6 +10,7 @@ from core.models.project import Project
 from core.models.subscriber import Subscriber
 from core.models.news_type import NewsType
 from core.models.refresh_token import RefreshToken
+from core.models.document import Document
 
 
 all = (
@@ -22,6 +23,7 @@ all = (
     "Partner",
     "Poll",
     "Project",
+    "Document",
     "Subscriber",
     "NewsType",
     "RefreshToken",

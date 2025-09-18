@@ -52,7 +52,7 @@ async def create_event(
     user: User = Depends(get_current_active_user),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    image_url = await file_service.save_upload_file(image, EVENTS_FOLDER)
+    image_url = await file_service.save_image_file(image, EVENTS_FOLDER)
     event = await crud.create_event(
         session=session,
         title=title,
@@ -87,7 +87,7 @@ async def update_event(
 
     if image:
         await file_service.delete_file(current_event.image_url)
-        image_url = await file_service.save_upload_file(image, EVENTS_FOLDER)
+        image_url = await file_service.save_image_file(image, EVENTS_FOLDER)
 
     event = crud.update_event(
         session=session,

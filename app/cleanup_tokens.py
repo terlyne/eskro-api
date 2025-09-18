@@ -7,6 +7,7 @@ from sqlalchemy import delete, and_
 from core.db_helper import db_helper
 from core.models import RefreshToken
 
+
 async def cleanup_tokens():
     try:
         async with db_helper.session_factory() as session:

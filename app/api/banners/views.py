@@ -24,7 +24,7 @@ async def create_banner(
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
     # Сохраняем изображение баннера
-    image_url = await file_service.save_upload_file(
+    image_url = await file_service.save_image_file(
         upload_file=image,
         subdirectory=BANNERS_FOLDER,
     )
@@ -84,7 +84,7 @@ async def update_banner(
 
     if image:
         await file_service.delete_file(current_banner.image_url)
-        image_url = await file_service.save_upload_file(image, BANNERS_FOLDER)
+        image_url = await file_service.save_image_file(image, BANNERS_FOLDER)
 
     banner = await crud.update_banner(
         session=session,

@@ -66,6 +66,7 @@ class AdminConfig(BaseModel):
 class FileConfig(BaseModel):
     uploads_dir: Path = BASE_DIR / "uploads"
     allowed_image_types: set[str]
+    allowed_document_types: set[str]
     max_file_size: int
 
 
@@ -75,6 +76,7 @@ class HeaderConfig(BaseModel):
 
 class SSLConfig(BaseModel):
     dir: str
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -94,5 +96,6 @@ class Settings(BaseSettings):
     file: FileConfig
     header: HeaderConfig
     ssl: SSLConfig
+
 
 settings = Settings()

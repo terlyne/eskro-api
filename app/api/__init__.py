@@ -12,6 +12,7 @@ from api.polls.views import router as polls_router
 from api.projects.views import router as projects_router
 from api.subscribers.views import router as subscribers_router
 from api.contacts.views import router as contacts_router
+from api.documents.views import router as documents_router
 from api.files.views import router as files_router
 from api.search.views import router as search_router
 
@@ -36,6 +37,7 @@ router.include_router(
     prefix="/subscribers",
     tags=["Subscribers"],
 )
+router.include_router(router=documents_router, prefix="/documents", tags=["Documents"])
 router.include_router(router=contacts_router, prefix="/contacts", tags=["Contacts"])
 router.include_router(router=files_router, prefix="/files", tags=["Files"])
 router.include_router(router=search_router, prefix="/search", tags=["Search"])

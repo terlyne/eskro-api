@@ -60,7 +60,7 @@ async def create_news(
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
     news_date = parse_str_to_date(news_date)
-    image_url = await file_service.save_upload_file(
+    image_url = await file_service.save_image_file(
         upload_file=image, subdirectory=NEWS_FOLDER
     )
     news = await crud.create_news(
@@ -100,7 +100,7 @@ async def update_news(
 
     if image:
         await file_service.delete_file(current_news.image_url)
-        image_url = await file_service.save_upload_file(
+        image_url = await file_service.save_image_file(
             upload_file=image, subdirectory=NEWS_FOLDER
         )
 

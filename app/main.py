@@ -78,4 +78,3 @@ if __name__ == "__main__":
         uvicorn_config.update(ssl_config)
 
     uvicorn.run(**uvicorn_config)
-
