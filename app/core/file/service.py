@@ -29,7 +29,7 @@ class FileService:
         filename = f"{uuid.uuid4().hex}{file_extension}"
 
         save_path = self.uploads_dir / subdirectory / filename
-        save_path.parent.mkdir(parent=True, exist_ok=True)
+        save_path.parent.mkdir(parents=True, exist_ok=True)
 
         async with aiofiles.open(save_path, "wb") as f:
             content = await upload_file.read()
