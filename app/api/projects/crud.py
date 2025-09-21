@@ -8,8 +8,15 @@ from core.models import Project
 
 async def get_projects(
     session: AsyncSession,
+    skip: int | None = None,
+    limit: int | None = None,
 ) -> list[Project]:
-    stmt = select(Project).order_by(desc(Project.created_at))
+    if skip and limit:
+        stmt = (
+            select(Project).offset(skip).limit(limit).order_by(desc(Project.created_at))
+        )
+    else:
+        stmt = select(Project).order_by(desc(Project.created_at))
     result = await session.scalars(stmt)
     projects = result.all()
 

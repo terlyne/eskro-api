@@ -31,9 +31,15 @@ async def get_news(
 
 @router.get("/preview/", response_model=list[NewsPreviewResponse])
 async def get_news_preview(
+    skip: int = 0,
+    limit: int = 10,
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    news = await crud.get_news(session=session)
+    news = await crud.get_news(
+        session=session,
+        skip=skip,
+        limit=limit,
+    )
     news_preview = []
     for news_item in news:
         news_preview.append(

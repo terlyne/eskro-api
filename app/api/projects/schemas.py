@@ -8,10 +8,18 @@ class ProjectBase(BaseModel):
     title: str
     body: str
     is_active: bool
-    keywords: list[Annotated[str, Field(max_length=100)]]
+    min_text: str
+    image_url: str
+    keywords: list[str]
     theme: str
-    category: Annotated[str, Field(max_length=100)]
+    category: str
 
 
-class ProjectResponse(ProjectBase):
+class ProjectPreviewResponse(BaseModel):
+    id: uuid.UUID
+    min_text: str
+    image_url: str
+
+
+class ProjectFullResponse(ProjectBase):
     id: uuid.UUID

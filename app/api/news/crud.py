@@ -8,7 +8,11 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.models import News, NewsType
 
 
-async def get_news(session: AsyncSession) -> list[News]:
+async def get_news(
+    session: AsyncSession,
+    skip: int | None = None,
+    limit: int | None = None,
+) -> list[News]:
     stmt = select(News).options(joinedload(News.type))
     result = await session.scalars(stmt)
     news = result.all()

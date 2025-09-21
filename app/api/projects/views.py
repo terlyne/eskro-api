@@ -8,14 +8,14 @@ from core.models import User
 from core.db_helper import db_helper
 from core.file.service import file_service, PROJECTS_IMAGES_FOLDER
 from api.dependencies import get_current_active_user
-from api.projects.schemas import ProjectResponse
+from api.projects.schemas import ProjectFullResponse, ProjectPreviewResponse
 from api.projects import crud
 
 
 router = APIRouter()
 
 
-@router.get("/", response_model=list[ProjectResponse])
+@router.get("/", response_model=list[ProjectFullResponse])
 async def get_projects(
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
@@ -24,7 +24,25 @@ async def get_projects(
     return projects
 
 
-@router.get("/{project_id}/", response_model=ProjectResponse)
+@router.get("/preview/", response_model=list[ProjectPreviewResponse])
+async def get_preview_projects(
+    skip: int = 0,
+    limit: int = 6,
+    session: AsyncSession = Depends(db_helper.session_getter),
+):
+    projects = await crud.get_projects(session=session, skip=skip, limit=limit)
+    preview_projects = []
+    for project in projects:
+        preview_projects.append(
+            ProjectPreviewResponse(
+                id=project.id, min_text=project.min_text, image_url=project.image_url
+            )
+        )
+
+    return preview_projects
+
+
+@router.get("/{project_id}/", response_model=ProjectFullResponse)
 async def get_project_by_id(
     project_id: uuid.UUID,
     session: AsyncSession = Depends(db_helper.session_getter),
@@ -39,7 +57,7 @@ async def get_project_by_id(
     return project
 
 
-@router.post("/", response_model=ProjectResponse)
+@router.post("/", response_model=ProjectFullResponse)
 async def create_project(
     title: Annotated[str, Form()],
     body: Annotated[str, Form()],
@@ -70,7 +88,7 @@ async def create_project(
     return project
 
 
-@router.patch("/{project_id}/", response_model=ProjectResponse)
+@router.patch("/{project_id}/", response_model=ProjectFullResponse)
 async def update_project(
     project_id: uuid.UUID,
     title: Annotated[str | None, Form()] = None,
