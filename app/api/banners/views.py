@@ -4,7 +4,7 @@ import uuid
 from fastapi import APIRouter, HTTPException, status, Form, UploadFile, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.file.service import file_service, BANNERS_FOLDER
+from core.file.service import file_service, BANNERS_IMAGES_FOLDER
 from core.models import User
 from core.db_helper import db_helper
 from api.dependencies import get_current_active_user
@@ -24,9 +24,9 @@ async def create_banner(
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
     # Сохраняем изображение баннера
-    image_url = await file_service.save_image_file(
+    image_url = await file_service.save_file(
         upload_file=image,
-        subdirectory=BANNERS_FOLDER,
+        subdirectory=BANNERS_IMAGES_FOLDER,
     )
 
     banner = await crud.create_banner(
@@ -84,7 +84,7 @@ async def update_banner(
 
     if image:
         await file_service.delete_file(current_banner.image_url)
-        image_url = await file_service.save_image_file(image, BANNERS_FOLDER)
+        image_url = await file_service.save_file(image, BANNERS_IMAGES_FOLDER)
 
     banner = await crud.update_banner(
         session=session,

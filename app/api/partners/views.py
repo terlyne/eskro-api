@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import User
 from core.db_helper import db_helper
-from core.file.service import file_service, PARTNERS_FOLDER
+from core.file.service import file_service, PARTNERS_IMAGES_FOLDER
 from api.dependencies import get_current_active_user
 from api.partners.schemas import PartnerResponse
 from api.partners import crud
@@ -47,9 +47,9 @@ async def create_partner(
     user: User = Depends(get_current_active_user),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    logo_url = await file_service.save_image_file(
+    logo_url = await file_service.save_file(
         upload_file=logo,
-        subdirectory=PARTNERS_FOLDER,
+        subdirectory=PARTNERS_IMAGES_FOLDER,
     )
     partner = await crud.create_partner(
         session=session,
@@ -83,8 +83,9 @@ async def update_partner(
 
     if logo:
         await file_service.delete_file(current_partner.logo_url)
-        logo_url = await file_service.save_image_file(
-            upload_file=logo, subdirectory=PARTNERS_FOLDER
+        logo_url = await file_service.save_file(
+            upload_file=logo,
+            subdirectory=PARTNERS_IMAGES_FOLDER,
         )
 
     partner = await crud.update_partner(

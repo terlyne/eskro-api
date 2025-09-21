@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import User
 from core.db_helper import db_helper
-from core.file.service import file_service, EVENTS_FOLDER
+from core.file.service import file_service, EVENTS_IMAGES_FOLDER
 from api.dependencies import get_current_active_user
 from api.events.schemas import EventResponse
 from api.events import crud
@@ -52,7 +52,7 @@ async def create_event(
     user: User = Depends(get_current_active_user),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    image_url = await file_service.save_image_file(image, EVENTS_FOLDER)
+    image_url = await file_service.save_file(image, EVENTS_IMAGES_FOLDER)
     event = await crud.create_event(
         session=session,
         title=title,
@@ -87,7 +87,7 @@ async def update_event(
 
     if image:
         await file_service.delete_file(current_event.image_url)
-        image_url = await file_service.save_image_file(image, EVENTS_FOLDER)
+        image_url = await file_service.save_file(image, EVENTS_IMAGES_FOLDER)
 
     event = crud.update_event(
         session=session,

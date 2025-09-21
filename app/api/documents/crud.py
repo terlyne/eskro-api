@@ -42,6 +42,21 @@ async def get_document_by_id(
     return document
 
 
+async def update_document(
+    session: AsyncSession,
+    current_document: Document,
+    **kw,
+) -> Document:
+    for field, value in kw.items():
+        if value and hasattr(current_document, field):
+            setattr(current_document, field, value)
+
+    await session.commit()
+    await session.refresh(current_document)
+
+    return current_document
+
+
 async def deactivate_document(session: AsyncSession, document_id: uuid.UUID) -> bool:
     document = await get_document_by_id(session=session, document_id=document_id)
     if not document:

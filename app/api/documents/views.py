@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, Depends, UploadFile, Form, HTTPException, status
 
 from core.models import User
-from core.file.service import file_service
+from core.file.service import file_service, DOCUMENTS_FOLDER
 from core.db_helper import db_helper
 from api.dependencies import get_current_active_user
 from api.documents import crud
@@ -23,7 +23,7 @@ async def upload_document(
     user: User = Depends(get_current_active_user),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    file_url = await file_service.save_document_file(file)
+    file_url = await file_service.save_file(file, DOCUMENTS_FOLDER)
 
     document = await crud.create_document(
         session=session,
@@ -53,6 +53,39 @@ async def get_document_by_id(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Document not found",
         )
+
+    return document
+
+
+@router.patch("/{document_id}/", response_model=DocumentResponse)
+async def update_document(
+    document_id: uuid.UUID,
+    file: UploadFile | None = None,
+    title: Annotated[str | None, Form()] = None,
+    is_active: Annotated[bool | None, Form()] = None,
+    user: User = Depends(get_current_active_user),
+    session: AsyncSession = Depends(db_helper.session_getter),
+):
+    current_document = await crud.get_document_by_id(
+        session=session, document_id=document_id
+    )
+    if not current_document:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Document not found",
+        )
+
+    if file:
+        await file_service.delete_file(current_document.file_url)
+        file_url = await file_service.save_file(file, DOCUMENTS_FOLDER)
+
+    document = await crud.update_document(
+        session=session,
+        document=document,
+        file_url=file_url,
+        title=title,
+        is_active=is_active,
+    )
 
     return document
 

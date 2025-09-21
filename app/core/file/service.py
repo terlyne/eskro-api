@@ -7,10 +7,14 @@ from fastapi import HTTPException, status, UploadFile
 
 from core.config import settings
 
-BANNERS_FOLDER = "images/banners"
-EVENTS_FOLDER = "images/events"
-NEWS_FOLDER = "images/news"
-PARTNERS_FOLDER = "images/partners"
+IMAGES_FOLDER = "images"
+
+BANNERS_IMAGES_FOLDER = "images/banners"
+EVENTS_IMAGES_FOLDER = "images/events"
+NEWS_IMAGES_FOLDER = "images/news"
+PARTNERS_IMAGES_FOLDER = "images/partners"
+PROJECTS_IMAGES_FOLDER = "images/projects"
+DOCUMENTS_FOLDER = "documents"
 
 
 class FileService:
@@ -20,30 +24,16 @@ class FileService:
         self.allowed_document_types: set = settings.file.allowed_document_types
         self.max_file_size: int = settings.file.max_file_size
 
-    async def save_document_file(
-        self, upload_file: UploadFile, subdirectory: str = "documents"
-    ):
-        await self._validate_document_file(upload_file)
-
-        file_extension = os.path.splitext(upload_file.filename)[1]
-        filename = f"{uuid.uuid4().hex}{file_extension}"
-
-        save_path = self.uploads_dir / subdirectory / filename
-        save_path.parent.mkdir(parents=True, exist_ok=True)
-
-        async with aiofiles.open(save_path, "wb") as f:
-            content = await upload_file.read()
-            await f.write(content)
-
-        relative_path = str(Path(subdirectory) / filename)
-        return relative_path.replace("\\", "/")
-
-    async def save_image_file(
+    async def save_file(
         self,
         upload_file: UploadFile,
         subdirectory: str,
     ) -> str:
-        await self._validate_image_file(upload_file)
+        if subdirectory.startswith(IMAGES_FOLDER):
+            await self._validate_image_file(upload_file)
+
+        if subdirectory.startswith(DOCUMENTS_FOLDER):
+            await self._validate_document_file(upload_file)
 
         file_extension = os.path.splitext(upload_file.filename)[1]
         filename = f"{uuid.uuid4().hex}{file_extension}"

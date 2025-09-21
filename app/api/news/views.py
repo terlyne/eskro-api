@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import User
 from core.db_helper import db_helper
-from core.file.service import file_service, NEWS_FOLDER
+from core.file.service import file_service, NEWS_IMAGES_FOLDER
 from api.dependencies import get_current_active_user
 from api.helpers import parse_str_to_date
 from api.news.schemas import (
@@ -60,8 +60,8 @@ async def create_news(
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
     news_date = parse_str_to_date(news_date)
-    image_url = await file_service.save_image_file(
-        upload_file=image, subdirectory=NEWS_FOLDER
+    image_url = await file_service.save_file(
+        upload_file=image, subdirectory=NEWS_IMAGES_FOLDER
     )
     news = await crud.create_news(
         session=session,
@@ -100,8 +100,8 @@ async def update_news(
 
     if image:
         await file_service.delete_file(current_news.image_url)
-        image_url = await file_service.save_image_file(
-            upload_file=image, subdirectory=NEWS_FOLDER
+        image_url = await file_service.save_file(
+            upload_file=image, subdirectory=NEWS_IMAGES_FOLDER
         )
 
     news = await crud.update_news(
