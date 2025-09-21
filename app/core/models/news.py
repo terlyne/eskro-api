@@ -19,7 +19,7 @@ class News(Base, IdMixin):
     body: Mapped[str] = mapped_column(Text())  # Содержание новости в формате HTML
 
     # Ключевые слова для поиска внутри сайта
-    keywords: Mapped[list[str]] = mapped_column(ARRAY(String(100)))
+    keywords: Mapped[list[str]] = mapped_column(ARRAY(Text()))
     image_url: Mapped[str] = mapped_column(Text())
     min_text: Mapped[str] = mapped_column(
         Text()

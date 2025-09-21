@@ -90,24 +90,6 @@ async def update_document(
     return document
 
 
-@router.delete("/{document_id}/deactivate/")
-async def deactivate_document(
-    document_id: uuid.UUID,
-    user: User = Depends(get_current_active_user),
-    session: AsyncSession = Depends(db_helper.session_getter),
-):
-    is_deactivated = await crud.deactivate_document(
-        session=session, document_id=document_id
-    )
-    if not is_deactivated:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Document not found",
-        )
-
-    return {"message": "success"}
-
-
 @router.delete("/{document_id}/")
 async def delete_document(
     document_id: uuid.UUID,

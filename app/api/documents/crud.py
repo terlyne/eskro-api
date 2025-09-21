@@ -57,16 +57,6 @@ async def update_document(
     return current_document
 
 
-async def deactivate_document(session: AsyncSession, document_id: uuid.UUID) -> bool:
-    document = await get_document_by_id(session=session, document_id=document_id)
-    if not document:
-        return False
-
-    document.is_active = False
-    await session.commit()
-    return True
-
-
 async def delete_document(session: AsyncSession, document_id: uuid.UUID) -> bool:
     document = await get_document_by_id(session=session, document_id=document_id)
     if not document:

@@ -15,16 +15,3 @@ class ProjectBase(BaseModel):
 
 class ProjectResponse(ProjectBase):
     id: uuid.UUID
-
-
-class ProjectCreate(ProjectBase):
-    pass
-
-
-class ProjectUpdate(BaseModel):
-    title: str | None = None
-    body: str | None = None
-    is_active: bool | None = None
-    keywords: list[Annotated[str, Field(max_length=100)]] | None = None
-    theme: str | None = None
-    category: Annotated[str, Field(max_length=100)] | None = None

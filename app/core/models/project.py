@@ -11,7 +11,13 @@ class Project(Base, IdMixin):
     is_active: Mapped[bool] = mapped_column(default=True, server_default="true")
 
     # Ключевые слова для поиска внутри сайта
-    keywords: Mapped[list[str]] = mapped_column(ARRAY(String(100)))
+    keywords: Mapped[list[str]] = mapped_column(ARRAY(Text()))
+
+    # Минимальный текст для отображения на главной странице
+    min_text: Mapped[str] = mapped_column(Text())
+
+    # Изображение для отображения на главной странице
+    image_url: Mapped[str] = mapped_column(Text())
 
     # Тематика (образование, воспитание, профориентация)
     theme: Mapped[str] = mapped_column(String(100))

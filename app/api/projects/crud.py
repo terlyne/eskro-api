@@ -27,37 +27,30 @@ async def get_project_by_id(
     return project
 
 
-async def create_project(
-    session: AsyncSession,
-    project_in: ProjectCreate,
-) -> Project:
-    project = Project(**project_in.model_dump())
-    session.add(project)
+async def create_project(session: AsyncSession, **kw) -> Project:
+    project = Project()
+    for field, value in kw.items():
+        if hasattr(project, field) and value:
+            setattr(project, field, value)
 
+    session.add(project)
     await session.commit()
-    await session.refresh(project)
 
     return project
 
 
 async def update_project(
     session: AsyncSession,
-    project_id: uuid.UUID,
-    project_in: ProjectUpdate,
-) -> Project | None:
-    project = await get_project_by_id(session=session, project_id=project_id)
-    if not project:
-        return None
-
-    update_data = project_in.model_dump(exclude_none=True)
-
-    for field, value in update_data.items():
-        setattr(project, field, value)
+    current_project: Project,
+    **kw,
+):
+    for field, value in kw.items():
+        if hasattr(current_project, field) and value:
+            setattr(current_project, value)
 
     await session.commit()
-    await session.refresh(project)
 
-    return project
+    return current_project
 
 
 async def delete_project(
