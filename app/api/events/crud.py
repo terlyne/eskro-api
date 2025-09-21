@@ -65,7 +65,6 @@ async def update_event(
             setattr(current_event, field, value)
 
     await session.commit()
-    await session.refresh(current_event)
 
     return current_event
 

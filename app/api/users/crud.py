@@ -129,7 +129,6 @@ async def update_user(
         user.username = user_update.username
 
     await session.commit()
-    await session.refresh(user)
     return user
 
 

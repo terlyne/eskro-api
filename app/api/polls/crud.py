@@ -51,7 +51,6 @@ async def update_poll(
         setattr(poll, field, value)
 
     await session.commit()
-    await session.refresh(poll)
 
     return poll
 

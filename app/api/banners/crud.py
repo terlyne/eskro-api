@@ -56,7 +56,6 @@ async def update_banner(
             setattr(current_banner, field, value)
 
     await session.commit()
-    await session.refresh(current_banner)
 
     return current_banner
 

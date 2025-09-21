@@ -33,7 +33,6 @@ async def confirm_registration(session: AsyncSession, user_id: uuid.UUID) -> boo
         return False
     user.is_active = True
     await session.commit()
-    # await session.refresh(user)
     return True
 
 
@@ -91,5 +90,4 @@ async def change_user_password(
 
     user.password = password
     await session.commit()
-    await session.refresh(user)
     return user

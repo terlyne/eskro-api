@@ -52,7 +52,6 @@ async def update_document(
             setattr(current_document, field, value)
 
     await session.commit()
-    await session.refresh(current_document)
 
     return current_document
 

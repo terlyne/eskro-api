@@ -1,7 +1,7 @@
 import uuid
 from datetime import date
 
-from sqlalchemy import select, delete
+from sqlalchemy import select, desc
 from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -13,7 +13,18 @@ async def get_news(
     skip: int | None = None,
     limit: int | None = None,
 ) -> list[News]:
-    stmt = select(News).options(joinedload(News.type))
+    if skip and limit:
+        stmt = (
+            select(News)
+            .offset(skip)
+            .limit(limit)
+            .options(joinedload(News.type))
+            .order_by(desc(News.created_at))
+        )
+    else:
+        stmt = (
+            select(News).options(joinedload(News.type)).order_by(desc(News.created_at))
+        )
     result = await session.scalars(stmt)
     news = result.all()
 
@@ -66,7 +77,6 @@ async def update_news(
             setattr(current_news, field, value)
 
     await session.commit()
-    await session.refresh(current_news)
 
     return current_news
 
@@ -134,7 +144,6 @@ async def update_news_type(
 
     news_type.type = type_name
     await session.commit()
-    await session.refresh(news_type)
     return news_type
 
 

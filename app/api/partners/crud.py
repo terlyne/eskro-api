@@ -55,7 +55,6 @@ async def update_partner(
             setattr(current_partner, field, value)
 
     await session.commit()
-    await session.refresh(current_partner)
 
     return current_partner
 
