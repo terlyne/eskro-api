@@ -52,7 +52,7 @@ async def create_project(
     user: User = Depends(get_current_active_user),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    image_url = await file_service.save_image_file(
+    image_url = await file_service.save_file(
         upload_file=image, subdirectory=PROJECTS_IMAGES_FOLDER
     )
     project = await crud.create_project(
