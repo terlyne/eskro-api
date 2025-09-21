@@ -4,7 +4,6 @@ from sqlalchemy import select, delete, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import Project
-from api.projects.schemas import ProjectCreate, ProjectUpdate
 
 
 async def get_projects(
