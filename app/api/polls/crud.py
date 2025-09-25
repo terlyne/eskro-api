@@ -25,7 +25,11 @@ async def get_poll_by_id(
     session: AsyncSession,
     poll_id: uuid.UUID,
 ) -> Poll | None:
-    stmt = select(Poll).where(Poll.id == poll_id)
+    stmt = (
+        select(Poll)
+        .options(selectinload(Poll.questions).selectinload(PollQuestion.answers))
+        .where(Poll.id == poll_id)
+    )
 
     poll = await session.scalar(stmt)
 
