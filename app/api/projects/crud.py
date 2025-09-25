@@ -49,7 +49,7 @@ async def update_project(
     session: AsyncSession,
     current_project: Project,
     **kw,
-):
+) -> Project:
     for field, value in kw.items():
         if hasattr(current_project, field) and value:
             setattr(current_project, value)

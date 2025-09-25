@@ -6,6 +6,8 @@ from core.models.feedback import Feedback
 from core.models.news import News
 from core.models.partner import Partner
 from core.models.poll import Poll
+from core.models.poll_question import PollQuestion
+from core.models.poll_answer import PollAnswer
 from core.models.project import Project
 from core.models.subscriber import Subscriber
 from core.models.news_type import NewsType
@@ -22,6 +24,8 @@ all = (
     "News",
     "Partner",
     "Poll",
+    "PollQuestion",
+    "PollAnswer",
     "Project",
     "Document",
     "Subscriber",

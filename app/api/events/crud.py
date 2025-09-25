@@ -58,7 +58,7 @@ async def update_event(
     session: AsyncSession,
     current_event: Event,
     **kw,
-) -> Event | None:
+) -> Event:
 
     for field, value in kw.items():
         if hasattr(current_event, field) and value is not None:

@@ -49,7 +49,7 @@ async def update_partner(
     session: AsyncSession,
     current_partner: Partner,
     **kw,
-) -> Partner | None:
+) -> Partner:
     for field, value in kw.items():
         if hasattr(current_partner, field) and value is not None:
             setattr(current_partner, field, value)

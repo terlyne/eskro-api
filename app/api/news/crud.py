@@ -71,7 +71,7 @@ async def update_news(
     session: AsyncSession,
     current_news: News,
     **kw,
-) -> News | None:
+) -> News:
     for field, value in kw.items():
         if hasattr(current_news, field) and value is not None:
             setattr(current_news, field, value)

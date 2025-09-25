@@ -50,7 +50,7 @@ async def update_banner(
     session: AsyncSession,
     current_banner: Banner,
     **kw,
-) -> Banner | None:
+) -> Banner:
     for field, value in kw.items():
         if value is not None and hasattr(current_banner, field):
             setattr(current_banner, field, value)

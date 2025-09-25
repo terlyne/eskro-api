@@ -6,12 +6,7 @@ from pydantic import BaseModel, Field
 
 class PollBase(BaseModel):
     theme: Annotated[str, Field(max_length=100)]
-    yandex_poll_url: str
     is_active: bool
-
-
-class PollResponse(PollBase):
-    id: uuid.UUID
 
 
 class PollCreate(PollBase):
@@ -19,6 +14,35 @@ class PollCreate(PollBase):
 
 
 class PollUpdate(BaseModel):
-    theme: str | None = None
-    yandex_poll_url: str | None = None
+    theme: Annotated[str | None, Field(max_length=100)] = None
     is_active: bool | None = None
+
+
+class QuestionBase(BaseModel):
+    question_text: str
+
+
+class QuestionCreate(QuestionBase):
+    pass
+
+
+class AnswerBase(BaseModel):
+    answer_text: str
+
+
+class AnswerResponse(AnswerBase):
+    id: uuid.UUID
+
+
+class AnswerCreate(AnswerBase):
+    pass
+
+
+class QuestionResponse(QuestionBase):
+    id: uuid.UUID
+    answers: list[AnswerResponse] = []
+
+
+class PollResponse(PollBase):
+    id: uuid.UUID
+    questions: list[QuestionResponse] = []

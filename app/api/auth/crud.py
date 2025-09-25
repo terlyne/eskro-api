@@ -81,7 +81,9 @@ async def revoke_refresh_token(
 
 
 async def change_user_password(
-    session: AsyncSession, user_id: uuid.UUID, password: str
+    session: AsyncSession,
+    user_id: uuid.UUID,
+    password: str,
 ):
     user = await users_crud.get_user_by_id(session=session, user_id=user_id)
 
