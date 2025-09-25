@@ -19,8 +19,9 @@ async def create_banner(
         is_active=is_active,
         count_order=count_order,
     )
-
     session.add(banner)
+
+    await session.commit()
     await session.refresh(banner)
     return banner
 
