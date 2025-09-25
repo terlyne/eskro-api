@@ -97,7 +97,7 @@ async def update_event(
         await file_service.delete_file(current_event.image_url)
         image_url = await file_service.save_file(image, EVENTS_IMAGES_FOLDER)
 
-    event = crud.update_event(
+    event = await crud.update_event(
         session=session,
         current_event=current_event,
         title=title,
