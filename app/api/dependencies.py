@@ -93,7 +93,7 @@ async def verify_active_param_access(
     is_active: bool | None = Query(None),
     user: User | None = Depends(get_current_active_user_optional),
 ) -> bool:
-    if is_active is False and user is None:
-        return True
+    if is_active is False and user is not None:
+        return False
 
-    return False
+    return True
