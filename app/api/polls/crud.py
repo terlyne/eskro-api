@@ -55,9 +55,14 @@ async def create_poll(
     session.add(poll)
 
     await session.commit()
-    await session.refresh(poll)
+    stmt = (
+        select(Poll)
+        .where(Poll.id == poll.id)
+        .options(selectinload(Poll.questions).selectinload(PollQuestion.answers))
+    )
+    poll_with_relations = await session.scalar(stmt)
 
-    return poll
+    return poll_with_relations
 
 
 async def get_question_by_id(
