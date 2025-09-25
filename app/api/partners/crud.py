@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import select, desc, delete
+from sqlalchemy import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from core.models import Partner

@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.models import User
 from core.db_helper import db_helper
 from core.file.service import file_service, PROJECTS_IMAGES_FOLDER
-from api.dependencies import get_current_active_user
+from api.dependencies import get_current_active_user, verify_active_param_access
 from api.projects.schemas import ProjectFullResponse, ProjectPreviewResponse
 from api.projects import crud
 
@@ -17,9 +17,17 @@ router = APIRouter()
 
 @router.get("/", response_model=list[ProjectFullResponse])
 async def get_projects(
+    is_active: bool = Depends(verify_active_param_access),
+    skip: int = 0,
+    limit: int | None = None,
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    projects = await crud.get_projects(session=session)
+    projects = await crud.get_projects(
+        session=session,
+        is_active=is_active,
+        skip=skip,
+        limit=limit,
+    )
 
     return projects
 

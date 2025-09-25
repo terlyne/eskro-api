@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.file.service import file_service, BANNERS_IMAGES_FOLDER
 from core.models import User
 from core.db_helper import db_helper
-from api.dependencies import get_current_active_user
+from api.dependencies import get_current_active_user, verify_active_param_access
 from api.banners.schemas import BannerResponse
 from api.banners import crud
 
@@ -42,11 +42,17 @@ async def create_banner(
 
 @router.get("/", response_model=list[BannerResponse])
 async def get_banners(
+    is_active: bool = Depends(verify_active_param_access),
     skip: int = Query(0, ge=0),
     limit: int = Query(6, ge=1),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    banners = await crud.get_banners(session=session, skip=skip, limit=limit)
+    banners = await crud.get_banners(
+        session=session,
+        is_active=is_active,
+        skip=skip,
+        limit=limit,
+    )
     return banners
 
 

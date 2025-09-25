@@ -1,6 +1,6 @@
 from jwt import ExpiredSignatureError, InvalidTokenError
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import HTTPException, status, Depends
+from fastapi import HTTPException, status, Depends, Query
 from fastapi.security import OAuth2PasswordBearer
 
 from core.models.user import User, ADMIN_ROLE
@@ -11,6 +11,36 @@ from security import utils as security_utils
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="/api/auth/login/",
 )
+
+oauth2_scheme_optional = OAuth2PasswordBearer(
+    tokenUrl="/api/auth/login/",
+    auto_error=False,
+)
+
+
+async def get_current_user_optional(
+    token: str | None = Depends(oauth2_scheme_optional),
+    session: AsyncSession = Depends(db_helper.session_getter),
+) -> User | None:
+    if not token:
+        return None
+
+    try:
+        payload = security_utils.decode_jwt(token=token)
+        user_id = payload["sub"]
+        user = await get_user_by_id(session=session, user_id=user_id)
+        return user
+    except (ExpiredSignatureError, InvalidTokenError, ValueError):
+        return None
+
+
+async def get_current_active_user_optional(
+    user: User | None = Depends(get_current_user_optional),
+) -> User | None:
+    if user and user.is_active == True:
+        return user
+
+    return None
 
 
 async def get_current_user(
@@ -57,3 +87,13 @@ async def get_current_admin(
         )
 
     return user
+
+
+async def verify_active_param_access(
+    is_active: bool | None = Query(None),
+    user: User | None = Depends(get_current_active_user_optional),
+) -> bool:
+    if not is_active and user is None:
+        return True
+
+    return False

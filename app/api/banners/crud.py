@@ -27,10 +27,23 @@ async def create_banner(
 
 async def get_banners(
     session: AsyncSession,
+    is_active: bool = True,
     skip: int = 0,
     limit: int = 6,
 ) -> list[Banner]:
-    stmt = select(Banner).offset(skip).limit(limit).order_by(desc(Banner.created_at))
+    if is_active:
+        stmt = (
+            select(Banner)
+            .where(Banner.is_active == True)
+            .offset(skip)
+            .limit(limit)
+            .order_by(desc(Banner.created_at))
+        )
+    else:
+        stmt = (
+            select(Banner).offset(skip).limit(limit).order_by(desc(Banner.created_at))
+        )
+
     result = await session.scalars(stmt)
     banners = result.all()
     return list(banners)

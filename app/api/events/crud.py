@@ -9,10 +9,21 @@ from core.models import Event
 
 async def get_events(
     session: AsyncSession,
+    is_active: bool = True,
     skip: int = 0,
     limit: int = 10,
 ) -> list[Event]:
-    stmt = select(Event).offset(skip).limit(limit).order_by(desc(Event.created_at))
+    if is_active:
+        stmt = (
+            select(Event)
+            .where(Event.is_active == True)
+            .offset(skip)
+            .limit(limit)
+            .order_by(desc(Event.created_at))
+        )
+    else:
+        stmt = select(Event).offset(skip).limit(limit).order_by(desc(Event.created_at))
+
     result = await session.scalars(stmt)
     events = result.all()
 

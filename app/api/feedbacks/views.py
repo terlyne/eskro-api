@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.db_helper import db_helper
 from core.models import User
 from core.email.service import email_service
-from api.dependencies import get_current_active_user
+from api.dependencies import get_current_active_user, verify_active_param_access
 from api.feedbacks.schemas import FeedbackResponse, FeedbackCreate, FeedbackAnswer
 from api.feedbacks import crud
 
@@ -15,10 +15,14 @@ router = APIRouter()
 
 @router.get("/", response_model=list[FeedbackResponse])
 async def get_feedbacks(
+    is_active: bool = Depends(verify_active_param_access),
     user: User = Depends(get_current_active_user),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    feedbacks = await crud.get_feedbacks(session=session)
+    feedbacks = await crud.get_feedbacks(
+        session=session,
+        is_active=is_active,
+    )
     return feedbacks
 
 

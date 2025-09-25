@@ -25,8 +25,19 @@ async def create_document(
     return document
 
 
-async def get_documents(session: AsyncSession) -> list[Document]:
-    stmt = select(Document).order_by(desc(Document.created_at))
+async def get_documents(
+    session: AsyncSession,
+    is_active: bool = True,
+) -> list[Document]:
+    if is_active:
+        stmt = (
+            select(Document)
+            .where(Document.is_active == True)
+            .order_by(desc(Document.created_at))
+        )
+    else:
+        stmt = select(Document).order_by(desc(Document.created_at))
+
     result = await session.scalars(stmt)
     documents = result.all()
     return list(documents)

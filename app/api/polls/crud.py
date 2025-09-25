@@ -10,12 +10,21 @@ from api.polls.schemas import PollCreate, PollUpdate, QuestionCreate, AnswerCrea
 
 async def get_polls_with_questions_and_answers(
     session: AsyncSession,
+    is_active: bool = True,
 ) -> list[Poll]:
-    stmt = (
-        select(Poll)
-        .options(selectinload(Poll.questions).selectinload(PollQuestion.answers))
-        .order_by(desc(Poll.created_at))
-    )
+    if is_active:
+        stmt = (
+            select(Poll)
+            .where(Poll.is_active == True)
+            .options(selectinload(Poll.questions).selectinload(PollQuestion.answers))
+            .order_by(desc(Poll.created_at))
+        )
+    else:
+        stmt = (
+            select(Poll)
+            .options(selectinload(Poll.questions).selectinload(PollQuestion.answers))
+            .order_by(desc(Poll.created_at))
+        )
 
     result = await session.scalars(stmt)
     return list(result.unique().all())

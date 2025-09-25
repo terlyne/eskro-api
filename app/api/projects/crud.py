@@ -8,15 +8,45 @@ from core.models import Project
 
 async def get_projects(
     session: AsyncSession,
+    is_active: bool = True,
     skip: int | None = None,
     limit: int | None = None,
 ) -> list[Project]:
-    if skip and limit:
-        stmt = (
-            select(Project).offset(skip).limit(limit).order_by(desc(Project.created_at))
-        )
+    if is_active:
+        if skip:
+            stmt = (
+                select(Project)
+                .where(Project.is_active == True)
+                .offset(skip)
+                .order_by(desc(Project.created_at))
+            )
+            if limit:
+                stmt = (
+                    select(Project)
+                    .where(Project.is_active == True)
+                    .offset(skip)
+                    .limit(limit)
+                    .order_by(desc(Project.created_at))
+                )
+        else:
+            stmt = (
+                select(Project)
+                .where(Project.is_active == True)
+                .order_by(desc(Project.created_at))
+            )
     else:
-        stmt = select(Project).order_by(desc(Project.created_at))
+        if skip:
+            stmt = select(Project).offset(skip).order_by(desc(Project.created_at))
+            if limit:
+                stmt = (
+                    select(Project)
+                    .offset(skip)
+                    .limit(limit)
+                    .order_by(desc(Project.created_at))
+                )
+        else:
+            stmt = select(Project).order_by(desc(Project.created_at))
+
     result = await session.scalars(stmt)
     projects = result.all()
 

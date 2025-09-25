@@ -7,8 +7,17 @@ from core.models import Feedback
 from api.feedbacks.schemas import FeedbackCreate, FeedbackAnswer
 
 
-async def get_feedbacks(session: AsyncSession) -> list[Feedback]:
-    stmt = select(Feedback).order_by(desc(Feedback.created_at))
+async def get_feedbacks(
+    session: AsyncSession,
+    is_active: bool = True,
+) -> list[Feedback]:
+    if is_active:
+        stmt = (
+            select(Feedback).where(is_active=True).order_by(desc(Feedback.created_at))
+        )
+    else:
+        stmt = select(Feedback).order_by(desc(Feedback.created_at))
+
     result = await session.scalars(stmt)
     feedbacks = result.all()
 

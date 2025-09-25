@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from core.models import User
 from core.db_helper import db_helper
 from core.file.service import file_service, EVENTS_IMAGES_FOLDER
-from api.dependencies import get_current_active_user
+from api.dependencies import get_current_active_user, verify_active_param_access
 from api.events.schemas import EventResponse
 from api.events import crud
 
@@ -18,11 +18,17 @@ router = APIRouter()
 
 @router.get("/", response_model=list[EventResponse])
 async def get_events(
+    is_active: bool = Depends(verify_active_param_access),
     skip: int = Query(0, ge=0),
     limit: int = Query(10, ge=1),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    events = await crud.get_events(session=session, skip=skip, limit=limit)
+    events = await crud.get_events(
+        session=session,
+        is_active=is_active,
+        skip=skip,
+        limit=limit,
+    )
     return events
 
 

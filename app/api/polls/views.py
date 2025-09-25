@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 
 from core.models import User
 from core.db_helper import db_helper
-from api.dependencies import get_current_active_user
+from api.dependencies import get_current_active_user, verify_active_param_access
 from api.polls import crud
 from api.polls.schemas import (
     PollResponse,
@@ -22,9 +22,13 @@ router = APIRouter()
 
 @router.get("/", response_model=list[PollResponse])
 async def get_polls_with_questions_and_answers(
+    is_active: bool = Depends(verify_active_param_access),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    polls = await crud.get_polls_with_questions_and_answers(session=session)
+    polls = await crud.get_polls_with_questions_and_answers(
+        session=session,
+        is_active=is_active,
+    )
     return polls
 
 

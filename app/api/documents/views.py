@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends, UploadFile, Form, HTTPException, status
 from core.models import User
 from core.file.service import file_service, DOCUMENTS_FOLDER
 from core.db_helper import db_helper
-from api.dependencies import get_current_active_user
+from api.dependencies import get_current_active_user, verify_active_param_access
 from api.documents import crud
 from api.documents.schemas import DocumentResponse
 
@@ -36,9 +36,13 @@ async def upload_document(
 
 @router.get("/", response_model=list[DocumentResponse])
 async def get_documents(
+    is_active: bool = Depends(verify_active_param_access),
     session: AsyncSession = Depends(db_helper.session_getter),
 ):
-    documents = await crud.get_documents(session=session)
+    documents = await crud.get_documents(
+        session=session,
+        is_active=is_active,
+    )
     return documents
 
 
