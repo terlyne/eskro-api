@@ -57,8 +57,8 @@ async def create_event(
         event_date=event_date,
         location=location,
     )
-
     session.add(event)
+
     await session.commit()
     await session.refresh(event)
 
