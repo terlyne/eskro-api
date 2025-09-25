@@ -79,9 +79,15 @@ async def create_question(
     current_poll.questions.append(question)
 
     await session.commit()
-    await session.refresh(current_poll)
 
-    return current_poll
+    stmt = (
+        select(Poll)
+        .where(Poll.id == current_poll.id)
+        .options(selectinload(Poll.questions).selectinload(PollQuestion.answers))
+    )
+    poll = await session.scalar(stmt)
+
+    return poll
 
 
 async def delete_question(
