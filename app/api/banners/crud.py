@@ -20,7 +20,7 @@ async def create_banner(
         count_order=count_order,
     )
 
-    await session.add(banner)
+    session.add(banner)
     await session.refresh(banner)
     return banner
 
