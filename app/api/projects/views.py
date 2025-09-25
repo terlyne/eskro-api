@@ -120,6 +120,8 @@ async def update_project(
             detail="Project not found",
         )
 
+    image_url = None
+
     if image:
         await file_service.delete_file(current_project.image_url)
         image_url = await file_service.save_file(

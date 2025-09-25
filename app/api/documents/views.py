@@ -79,6 +79,8 @@ async def update_document(
             detail="Document not found",
         )
 
+    file_url = None
+
     if file:
         await file_service.delete_file(current_document.file_url)
         file_url = await file_service.save_file(file, DOCUMENTS_FOLDER)

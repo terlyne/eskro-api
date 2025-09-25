@@ -91,6 +91,8 @@ async def update_event(
             detail="Event not found",
         )
 
+    image_url = None
+
     if image:
         await file_service.delete_file(current_event.image_url)
         image_url = await file_service.save_file(image, EVENTS_IMAGES_FOLDER)

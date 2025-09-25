@@ -104,6 +104,8 @@ async def update_news(
             detail="News not found",
         )
 
+    image_url = None
+
     if image:
         await file_service.delete_file(current_news.image_url)
         image_url = await file_service.save_file(

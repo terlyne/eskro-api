@@ -81,6 +81,8 @@ async def update_partner(
             detail="Partner not found",
         )
 
+    logo_url = None
+
     if logo:
         await file_service.delete_file(current_partner.logo_url)
         logo_url = await file_service.save_file(

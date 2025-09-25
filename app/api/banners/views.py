@@ -88,6 +88,8 @@ async def update_banner(
             detail="Banner not found",
         )
 
+    image_url = None
+
     if image:
         await file_service.delete_file(current_banner.image_url)
         image_url = await file_service.save_file(image, BANNERS_IMAGES_FOLDER)
